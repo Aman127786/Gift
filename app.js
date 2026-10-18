@@ -451,4 +451,19 @@
             onWindowResize();
             setTimeout(triggerMegaCelebration, 600);
         };
-    
+    function onWindowResize() {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+
+    // Automatically adjust cake position and scale for mobile vs desktop
+    if (cakeGroup) {
+        if (window.innerWidth < 768) {
+            cakeGroup.position.set(0, -4.2, -1);
+            cakeGroup.scale.set(0.75, 0.75, 0.75); // Shrink cake slightly on mobile
+        } else {
+            cakeGroup.position.set(-5.5, -2.5, 1.5);
+            cakeGroup.scale.set(1, 1, 1);
+        }
+    }
+}
