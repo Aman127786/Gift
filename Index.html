@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday! - 3D Interactive Celebration</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Three.js for 3D Background Scene & 3D Cake -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800;900&family=Playfair+Display:ital,wght@0,700;1,600&display=swap" rel="stylesheet">
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+<body class="min-h-screen flex flex-col justify-between relative selection:bg-sky-500 selection:text-white">
+
+    <!-- 3D Three.js Background Canvas (Balloons, Stars & 3D Birthday Cake) -->
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- Top Navigation / Action Bar -->
+    <header class="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-6 pt-5 flex flex-wrap items-center justify-between gap-4">
+        <div class="flex items-center gap-3 glass-panel px-4 py-2.5 rounded-2xl shadow-lg">
+            <span class="flex h-3 w-3 relative">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-3 w-3 bg-amber-500"></span>
+            </span>
+            <span class="font-bold tracking-wider text-sm uppercase bg-gradient-to-r from-amber-300 via-sky-300 to-purple-400 bg-clip-text text-transparent">
+                19  October special
+            </span>
+        </div>
+
+        <!-- Interactive Controls (Customization button removed) -->
+        <div class="flex flex-wrap items-center gap-2.5">
+            <button id="btn-music" onclick="toggleBirthdayMusic()" class="glass-panel hover:bg-slate-800/80 text-amber-300 border border-amber-400/30 px-4 py-2.5 rounded-xl font-semibold text-sm flex items-center gap-2 transition-all active:scale-95 shadow-lg">
+                <i id="music-icon" class="ph-fill ph-music-notes text-lg"></i>
+                <span id="music-text">A Gift From Aman</span>
+            </button>
+
+            <button id="btn-confetti" onclick="triggerMegaCelebration()" class="bg-gradient-to-r from-amber-500 via-pink-500 to-purple-600 hover:from-amber-400 hover:to-purple-500 text-white px-4 py-2.5 rounded-xl font-semibold text-sm flex items-center gap-2 transition-all active:scale-95 shadow-lg shadow-purple-500/25">
+                <i class="ph-fill ph-confetti text-lg"></i>
+                <span>Pop Confetti!</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="relative z-10 flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 py-8 grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+        
+        <!-- Left Column: Birthday Typography, Wishes & Interactive Controls (7 cols) -->
+        <div class="lg:col-span-7 space-y-6 text-center lg:text-left order-2 lg:order-1">
+            
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-400/30 text-amber-300 text-xs sm:text-sm font-semibold tracking-wide uppercase">
+                <i class="ph-fill ph-sparkle"></i>
+                <span>Cheers to Another Epic Year Around the Sun</span>
+            </div>
+
+            <div class="space-y-2">
+                <h1 class="text-4xl sm:text-6xl xl:text-7xl font-black tracking-tight leading-none">
+                    <span class="block text-white drop-shadow-md">HAPPY</span>
+                    <span class="block bg-gradient-to-r from-amber-300 via-sky-400 to-purple-400 bg-clip-text text-transparent pb-2">
+                        BIRTHDAY
+                    </span>
+                </h1>
+                <h2 id="display-name" class="font-serif-display italic text-3xl sm:text-5xl text-amber-400 drop-shadow-[0_2px_15px_rgba(251,191,36,0.35)]">
+                    Mota    Bhai! ✨
+                </h2>
+            </div>
+
+            <!-- Wish Card -->
+            <div class="glass-panel p-6 sm:p-8 rounded-3xl shadow-2xl border-l-4 border-l-amber-400 relative overflow-hidden group max-w-2xl mx-auto lg:mx-0">
+                <div class="absolute -right-8 -top-8 w-32 h-32 bg-sky-500/10 rounded-full blur-2xl pointer-events-none"></div>
+                <i class="ph-fill ph-quotes text-4xl text-amber-400/30 absolute top-4 right-6"></i>
+                
+                <p id="display-message" class="text-base sm:text-lg text-slate-200 leading-relaxed font-normal relative z-10">
+                    Wishing you a year filled with unstoppable energy, late-night adventures, big wins, and unforgettable memories! May every dream you chase turn into reality. Keep shining and staying iconic!
+                </p>
+
+                <!-- Quick Wish Switcher Pills -->
+                <div class="mt-6 pt-5 border-t border-slate-700/60 flex flex-wrap items-center justify-center lg:justify-start gap-2">
+                    <span class="text-xs text-slate-400 uppercase tracking-wider font-semibold mr-2">Switch Vibe:</span>
+                    <button onclick="setPresetWish(0)" class="text-xs px-3 py-1.5 rounded-lg bg-slate-800/90 hover:bg-sky-500/20 hover:text-sky-300 border border-slate-700 transition">🔥 Epic & Cool</button>
+                    <button onclick="setPresetWish(1)" class="text-xs px-3 py-1.5 rounded-lg bg-slate-800/90 hover:bg-amber-500/20 hover:text-amber-300 border border-slate-700 transition">🥂 Heartfelt</button>
+                    <button onclick="setPresetWish(2)" class="text-xs px-3 py-1.5 rounded-lg bg-slate-800/90 hover:bg-purple-500/20 hover:text-purple-300 border border-slate-700 transition">🚀 Success & Hustle</button>
+                    <button onclick="setPresetWish(3)" class="text-xs px-3 py-1.5 rounded-lg bg-slate-800/90 hover:bg-pink-500/20 hover:text-pink-300 border border-slate-700 transition">😂 Fun & Witty</button>
+                </div>
+            </div>
+
+            <!-- Interactive 3D Cake & Candle Action Box -->
+            <div class="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-2">
+                <button id="btn-candle" onclick="blowOutCandle()" class="glass-panel hover:border-amber-400/60 px-6 py-4 rounded-2xl flex items-center gap-4 group transition-all hover:scale-105 active:scale-95">
+                    <div class="w-12 h-12 rounded-xl bg-amber-500/20 border border-amber-400/40 flex items-center justify-center text-2xl group-hover:rotate-12 transition">
+                        🎂
+                    </div>
+                    <div class="text-left">
+                        <div id="candle-status-title" class="font-bold text-white text-sm sm:text-base flex items-center gap-2">
+                            <span>Party To Banti🎂Hai🎉</span>
+                            <i class="ph-bold ph-wind text-amber-400"></i>
+                        </div>
+                        <div id="candle-status-sub" class="text-xs text-slate-400">
+                            Click to blow out the candle on the 3D cake!
+                        </div>
+                    </div>
+                </button>
+            </div>
+        </div>
+
+        <!-- Right Column: Interactive 3D Portrait Monument (5 cols) -->
+        <div class="lg:col-span-5 flex flex-col items-center justify-center order-1 lg:order-2">
+            
+            <!-- 3D Perspective Stage (Strictly Mouse Tilt Parallax) -->
+            <div id="card-stage" class="scene-3d w-full max-w-[360px] sm:max-w-[400px] aspect-[3/4] flex items-center justify-center cursor-crosshair select-none">
+                
+                <!-- 3D Rotating Parallax Wrapper -->
+                <div id="card-3d" class="card-3d-wrapper relative w-full h-full rounded-[2rem]">
+                    
+                    <!-- Deep 3D Backplate Glow Layer -->
+                    <div class="layer-back-plate absolute -inset-3 rounded-[2.4rem] bg-gradient-to-tr from-sky-500/40 via-purple-600/40 to-amber-500/40 blur-xl pointer-events-none"></div>
+
+                    <!-- Main 3D Card Frame -->
+                    <div class="layer-base relative w-full h-full rounded-[2rem] neon-frame bg-slate-900 border-2 border-white/20 overflow-hidden shadow-2xl">
+                        <!-- User's Uploaded Image (image_bdb806.jpg) -->
+                        <img id="birthday-photo" 
+                             src="a1.jfif" 
+                             alt="Birthday Star Portrait" 
+                             onerror="this.onerror=null; this.src='https://placehold.co/600x800/0f172a/38bdf8?text=Upload+image_bdb806.jpg';"
+                             class="w-full h-full object-cover object-center transform scale-105 transition-transform duration-500" />
+                        
+                        <!-- Subtle Cinematic Night Vignette matching the photo -->
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-slate-950/30 opacity-85"></div>
+
+                        <!-- Interactive Holographic Light Glare -->
+                        <div id="holo-glare" class="holo-glare absolute inset-0 opacity-80"></div>
+                    </div>
+
+                    <!-- Floating 3D Layer 1: Corner Neon Frame Accents -->
+                    <div class="layer-high absolute inset-4 rounded-3xl border border-amber-300/40 pointer-events-none flex flex-col justify-between p-4">
+                        <div class="flex justify-between items-start">
+                            <span class="px-3 py-1 rounded-full bg-slate-950/80 backdrop-blur-md border border-sky-400/40 text-[11px] font-bold tracking-widest uppercase text-sky-300 shadow-lg">
+                                ★ VIP EDITION
+                            </span>
+                            <span class="w-9 h-9 rounded-full bg-slate-950/80 backdrop-blur-md border border-amber-400/40 flex items-center justify-center text-lg shadow-lg">
+                                🎉
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Floating 3D Layer 2: Pop-out Crown & Emblems -->
+                    <div class="layer-high absolute -top-6 -right-5 pointer-events-none">
+                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 p-0.5 shadow-xl shadow-amber-500/30 rotate-12 flex items-center justify-center">
+                            <div class="w-full h-full bg-slate-950/90 rounded-[14px] flex items-center justify-center text-3xl">
+                                👑
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layer-high absolute top-1/2 -left-6 -translate-y-1/2 pointer-events-none">
+                        <div class="px-3 py-2 rounded-2xl bg-slate-900/90 backdrop-blur-md border border-purple-400/40 shadow-xl flex items-center gap-1.5 -rotate-6">
+                            <span class="text-xl">🎈</span>
+                            <span class="text-xs font-extrabold text-purple-300">Somil</span>
+                        </div>
+                    </div>
+
+                    <!-- Floating 3D Layer 3: Ultra Pop-Out Bottom Nameplate -->
+                    <div class="layer-ultra absolute bottom-6 left-5 right-5 pointer-events-none">
+                        <div class="glass-panel bg-slate-950/85 border border-amber-400/40 rounded-2xl p-4 shadow-[0_20px_50px_rgba(0,0,0,0.8)] flex items-center justify-between">
+                            <div>
+                                <p class="text-[11px] uppercase tracking-widest text-amber-400 font-bold">Celebrating</p>
+                                <h3 id="card-badge-name" class="text-xl font-black text-white tracking-tight">The Birthday Star</h3>
+                            </div>
+                            <div class="w-11 h-11 rounded-xl bg-gradient-to-tr from-sky-500 to-purple-500 flex items-center justify-center text-white shadow-md">
+                                <i class="ph-fill ph-sparkle text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <p class="mt-4 text-xs text-slate-400 flex items-center gap-1.5">
+                <i class="ph ph-cursor-click text-sky-400"></i>
+                <span>Move your mouse across the portrait to inspect depth layers</span>
+            </p>
+        </div>
+
+    </main>
+
+    <!-- Bottom Interactive Bar -->
+    <footer class="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 pb-5 pt-2 flex items-center justify-center text-xs text-slate-400">
+        <div class="flex items-center gap-2">
+            <span class="inline-block w-2 h-2 rounded-full bg-sky-400"></span>
+            <span>Interactive 3D Scene: Drag background to rotate 3D balloons & cake</span>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>

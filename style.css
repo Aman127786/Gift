@@ -1,0 +1,98 @@
+        :root {
+            --neon-blue: #38bdf8;
+            --neon-purple: #a855f7;
+            --neon-gold: #fbbf24;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #060913;
+            color: #f8fafc;
+            overflow-x: hidden;
+            margin: 0;
+            padding: 0;
+        }
+
+        .font-serif-display {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* 3D Perspective Container */
+        .scene-3d {
+            perspective: 1400px;
+        }
+
+        /* 3D Card Styling (Strictly Mouse Tilt Parallax) */
+        .card-3d-wrapper {
+            transform-style: preserve-3d;
+            transition: transform 0.1s ease-out;
+            will-change: transform;
+        }
+
+        /* Pop-out 3D Layers inside the Card */
+        .layer-base {
+            transform: translateZ(0px);
+            transform-style: preserve-3d;
+        }
+        .layer-back-plate {
+            transform: translateZ(-25px);
+        }
+        .layer-high {
+            transform: translateZ(65px);
+        }
+        .layer-ultra {
+            transform: translateZ(95px);
+        }
+
+        /* Holographic Glare Overlay */
+        .holo-glare {
+            background: radial-gradient(
+                circle at var(--glare-x, 50%) var(--glare-y, 50%),
+                rgba(255, 255, 255, 0.35) 0%,
+                rgba(56, 189, 248, 0.18) 25%,
+                rgba(168, 85, 247, 0.15) 50%,
+                transparent 75%
+            );
+            mix-blend-mode: screen;
+            pointer-events: none;
+        }
+
+        /* Glowing Neon Border */
+        .neon-frame {
+            box-shadow: 
+                0 0 25px rgba(56, 189, 248, 0.35),
+                0 0 60px rgba(168, 85, 247, 0.25),
+                inset 0 0 20px rgba(251, 191, 36, 0.2);
+        }
+
+        /* ThreeJS Background Canvas */
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            pointer-events: auto;
+        }
+
+        /* Glassmorphism UI */
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #060913;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 4px;
+        }
+    
