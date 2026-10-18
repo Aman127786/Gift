@@ -95,4 +95,18 @@
             background: #1e293b;
             border-radius: 4px;
         }
+
+/* Mobile Optimizations */
+@media (max-width: 768px) {
+    body {
+        overflow-x: hidden;
+        touch-action: pan-y; /* Allow smooth vertical scrolling, prevent accidental horizontal traps */
+    }
+
+    #bg-canvas {
+        touch-action: none; /* Keeps 3D background touch rotation smooth without scrolling the page */
+    }
+}
+
+
     
